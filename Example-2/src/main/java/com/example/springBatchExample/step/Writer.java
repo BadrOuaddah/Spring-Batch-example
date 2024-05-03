@@ -1,13 +1,15 @@
 package com.example.springBatchExample.step;
 
-import org.springframework.batch.item.Chunk;
 import org.springframework.batch.item.ItemWriter;
 
+import java.util.List;
+
 public class Writer implements ItemWriter<String> {
+
     @Override
-    public void write(Chunk<? extends String> chunk) throws Exception {
-        for (String chnk : chunk) {
-            System.out.println("Writing the data " + chnk);
+    public void write(List<? extends String> message) throws Exception {
+        for (String msg : message) {
+            System.out.println("Writing the data " + message);
         }
     }
 }
