@@ -37,5 +37,4 @@ public class BatchConfig {
         dataSourceInitializer.setDatabasePopulator(populator);
         return dataSourceInitializer;
     }
-
 }
