@@ -6,17 +6,12 @@ spring:
     jdbc:
       initialize-schema: always
   datasource:
-    driver-class-name: org.h2.Driver
-    url: jdbc:h2:mem:testdb
-    username: sa
+    url: jdbc:mysql://localhost:3306/student
+    username: root
     password:
+    driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
-    database-platform: org.hibernate.dialect.H2Dialect
+    database-platform: org.hibernate.dialect.MySQLDialect
     hibernate:
-      format_sql: true
-    show-sql: false
-    properties:
-      hibernate:
-        jdbc:
-          lob:
-            non_contextual_creation: true
+      ddl-auto: update
+    show-sql: true

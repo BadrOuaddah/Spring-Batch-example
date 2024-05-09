@@ -33,13 +33,14 @@ public class SpringBatchConfig {
     public FlatFileItemReader<Student> readStudents() {
         return new FlatFileItemReaderBuilder<Student>()
                 .name("readStudents")
-                .resource(new ClassPathResource("student.csv"))
+                .resource(new ClassPathResource("csv/student.csv"))
                 .linesToSkip(1)
                 .delimited()
                 .names(new String[]{"id", "firstname", "lastname", "age", "gender", "dateOfBirthday", "email", "score", "status"})
                 .fieldSetMapper(new BeanWrapperFieldSetMapper<>() {{
                     setTargetType(Student.class);
                 }})
+                .strict(false)
                 .build();
     }
 
