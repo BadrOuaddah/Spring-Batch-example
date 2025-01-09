@@ -122,10 +122,59 @@ Albert,Pinto,44,false
 
 #### Step 4
 
-**+ Create CSV to database Job :**
+**+ Create CSV to database Job for read CSV file :**
   
 > CsvToDatabaseJob.java
 
 ```java
 public class CsvToDatabaseJob {}
+```
+
+**+ Add Job and Step :**
+
+```java
+    @Bean
+    public Job csvToDatabaseJob() {
+        return jobBuilderFactory.get("csvToDatabaseJob")
+                .start(step1())
+                .build();
+    }
+
+    @Bean
+    public Step step1() {
+        return stepBuilderFactory.get("step1")
+                .<Person, Person>chunk(10)
+                .reader(reader())
+                .processor(personItemProcessor)
+                .writer(writer())
+                .build();
+    }
+```
+
+**+ CSV Reading :**
+
+```java
+    @Bean
+    public FlatFileItemReader<Person> reader() {
+        return new FlatFileItemReaderBuilder<Person>()
+                .name("personItemReader")
+                .resource(new ClassPathResource("data.csv"))
+                .delimited()
+                .names(new String[]{"firstName", "lastName", "age", "active"})
+                .fieldSetMapper(new BeanWrapperFieldSetMapper<Person>() {{
+                    setTargetType(Person.class);
+                }})
+                .build();
+    }
+
+    @Bean
+    public ItemWriter<Person> writer() {
+        return new CompositeItemWriterBuilder<Person>()
+                .delegates(new JdbcBatchItemWriterBuilder<Person>()
+                        .itemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<>())
+                        .sql("INSERT INTO person (first_name, last_name, age, active) VALUES (:firstName, :lastName, :age, :active)")
+                        .dataSource(dataSource)
+                        .build())
+                .build();
+    }
 ```
